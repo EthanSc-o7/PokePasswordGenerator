@@ -59,36 +59,34 @@ def generate_password(roster):
 
 def random_generate():
     roster = []
-    print("Generate a password using 4 Pokemon...")
     i = 0
     while i < 4:
         pokemon_name = random.randrange(1, 1026)
         pokemon_info = get_pokemon_info(pokemon_name)
         if pokemon_info:
             i += 1
-            # print(f"Name: {pokemon_info['name'].capitalize()}")
-            # print(f"Id: {pokemon_info['id']}")
-            # print(f"Ability: {pokemon_info['abilities'][0].get('ability')['name']}")
-
             name = pokemon_info['name'].capitalize()
             pokeID = pokemon_info['id']
             ability = secrets.choice(pokemon_info['abilities']).get('ability')['name']
             sprite = pokemon_info['sprites']['front_default']
             roster.append(Pokemon(name, pokeID, ability, sprite))
-
         else:
             print("Please enter a valid pokemon")
     newpass = generate_password(roster)
     return newpass
 
+with open("names.txt", 'r') as f:
+    lines = f.readlines()
+pkmnList = [e.strip() for e in lines]
 
 font = ("Consolas", 11)
-sg.theme('Light Brown 13')
-layout = [[sg.Text('Click Generate or Submit 4 pokemon 1 at a time')],
-          [sg.Button("Generate"), sg.Input(key='Pokemon', size=(30, 1)), sg.Button('Submit')],
+sg.theme('Light Green 2')
+layout = [[sg.Text('Click Generate or Submit 4 Pokemon 1 at a time')],
+          [sg.Button("Generate"), sg.Combo(pkmnList, key='Pokemon', size=(30, 1)), sg.Button('Submit')],
           [sg.Push(), sg.Image(key='1'), sg.Image(key='2'), sg.Image(key='3'), sg.Image(key='4'), sg.Push(), ],
           [sg.Push(), sg.Text(key='-selection-'), sg.Push()],
-          [sg.Button('Reset'), sg.Text(key='-OUT-'), sg.Button('COPY')]]
+          [sg.Push(),sg.Button('Reset'), sg.Text(key='-OUT-'), sg.Button('COPY'),sg.Push()]]
+names = ""
 pokemonRoster = []
 i = 0
 # Create the Window
@@ -104,13 +102,14 @@ while True:
         newPassword = random_generate()
         window['-OUT-'].update(newPassword)
     if event == "Submit":
-        # pokemonRoster.append(values['Pokemon'])
-        # print(pokemonRoster)
 
         pokemon_info = get_pokemon_info(values['Pokemon'])
         if pokemon_info and values['Pokemon'] != "":
 
             name = pokemon_info['name'].capitalize()
+            names += name
+            if i != 3:
+                names += ", "
             pokeID = pokemon_info['id']
             ability = secrets.choice(pokemon_info['abilities']).get('ability')['name']
             sprite = pokemon_info['sprites']['front_default']
@@ -131,11 +130,13 @@ while True:
         window['3'].update("")
         window['4'].update("")
 
+    if event == 'COPY':
+        i = 0
+        text = window['-OUT-'].get()
+        pyperclip.copy(text)
+
     if i == 4:
         newPassword = generate_password(pokemonRoster)
         window['-OUT-'].update(newPassword)
 
-    if event == 'COPY':
-        text = window['-OUT-'].get()
-        pyperclip.copy(text)
 window.close()
