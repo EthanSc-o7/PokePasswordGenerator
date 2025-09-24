@@ -25,12 +25,15 @@
 <br />
 <div align="center">
     <img src="logo.ico" alt="Logo" width="80" height="80">
-  
 
   <h3 align="center">Poke Password Generator</h3>
 </div>
 
+<div align="center">
+    <img src="examplePassword.png" alt="EX" width="500" height="300">
 
+  <h3 align="center">Example Password</h3>
+</div>
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -63,6 +66,7 @@ Use Pokemon data to make easy to memorize and secure passwords, either via rando
 Users can generate passwords via:
 * main.py which runs in the terminal
 * pokepassword.py for a simple GUI implementation
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
